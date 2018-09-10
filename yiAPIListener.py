@@ -40,7 +40,8 @@ class YiAPIListener(threading.Thread):
 		self.start()
 
 	def run(self):
-		while True:
+		self.signal= threading.Event()
+		while not self.signal.wait(0.5):
 			logging.info('Wait...')
 			try:
 				recv= self.sock.recv(1024)
@@ -65,6 +66,9 @@ class YiAPIListener(threading.Thread):
 							logging.info('Callback static')
 							self.constantCB[cCb](resJSON)
 
+	def stop(self):
+		self.signal.set()
+		self.join()
 
 	'''
 	Assign Yi response callback.

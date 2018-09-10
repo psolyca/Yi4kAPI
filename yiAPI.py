@@ -53,6 +53,7 @@ class YiAPI():
 	#shoud be called at very end to tell camera it's released
 	def close(self):
 		self.cmd(self.stopSession)
+		self.listener.stop()
 
 		if self.sock:
 			self.sock.close()

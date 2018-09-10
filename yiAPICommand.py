@@ -1,11 +1,9 @@
 import logging
 
-
 '''
 Public available commands.
 '''
 commands= []
-
 
 '''
 Class usable to pass to YiAPI.cmd()
@@ -21,13 +19,10 @@ Class usable to pass to YiAPI.cmd()
 class YiAPICommandGen():
 	resultReq= None
 	resultCB= None
-
 	commandName= ''
 	params= None
-
 	variable= None
 	values= None	#available values list to assign to .variable. Logging use only.
-
 
 	def __init__(self,
 		_id,
@@ -50,16 +45,12 @@ class YiAPICommandGen():
 
 		self.variable= variable
 
-
 		if values:
 			self.values= values
-
 
 		if commandName:
 			self.commandName= commandName
 			commands.append(self)
-
-
 
 	'''
 	Create object representing command at runtime.
@@ -82,13 +73,7 @@ class YiAPICommandGen():
 			else:
 				_cmdPrep[pair[0]]= pair[1]
 
-
 		return YiAPICommand(_cmdPrep, self.resultReq, self.resultCB)
-
-
-
-
-
 
 
 import threading
@@ -103,7 +88,6 @@ class YiAPICommand():
 	blockingCnt= 1
 	blockingCB= None
 	blockingEvent= None
-
 	resultDict= None
 
 	def __init__(self, _cmdSend, _resultReq, _resultCB):
@@ -116,8 +100,6 @@ class YiAPICommand():
 			self.blockingCnt= 2
 
 		self.blockingCB, self.blockingEvent = self.blockingCBGen()
-
-
 
 	def result(self):
 		if not 'rval' in self.resultDict:
@@ -134,7 +116,6 @@ class YiAPICommand():
 		if 'param' in self.resultDict:
 			return self.resultDict['param']
 
-
 	'''
 	Generate callback suitable for supplying to YiAPIListener.assing()
 	and Event fired at callback call.
@@ -144,8 +125,6 @@ class YiAPICommand():
 		
 		def func(_res):
 			self.resultDict.update(_res)
-
-
 			self.blockingCnt-= 1
 			if ('rval' in _res) and (_res['rval']):
 				self.blockingCnt= 0
@@ -156,7 +135,6 @@ class YiAPICommand():
 
 		return (func, cbEvent)
 
-
 	'''
 	Check if Yi response matches command callback conditions
 	'''
@@ -164,7 +142,6 @@ class YiAPICommand():
 		matchTmpl= [{'msg_id': self.cmdSend['msg_id']}]
 		if self.resultReq:
 			matchTmpl.append(self.resultReq)
-
 
 		for cMatch in matchTmpl:
 			isMatch= True

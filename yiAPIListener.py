@@ -11,7 +11,6 @@ is camera state, pushed periodically.
 class YiAPIListener(threading.Thread):
 	commandsCB= []	#runtime commands listening
 	constantCB= {}
-
 	jsonStream= None
 
 	def __init__(self, _sock):
@@ -40,10 +39,6 @@ class YiAPIListener(threading.Thread):
 
 		self.start()
 
-
-
-
-
 	def run(self):
 		while True:
 			logging.info('Wait...')
@@ -60,9 +55,7 @@ class YiAPIListener(threading.Thread):
 				logging.info('Res %s' % str(resJSON))
 				if not 'msg_id' in resJSON:
 					logging.warning('Insufficient response, no msg_id')
-
 					continue
-
 
 				self.commandsCB= self.applyCB(self.commandsCB, resJSON)
 
@@ -71,7 +64,6 @@ class YiAPIListener(threading.Thread):
 						if self.constantCB[cCb] and resJSON['type']==cCb:
 							logging.info('Callback static')
 							self.constantCB[cCb](resJSON)
-
 
 
 	'''
@@ -91,16 +83,11 @@ class YiAPIListener(threading.Thread):
 
 		return True
 
-
-
 	'''
 	Assign one-time callback for awaited command responce.
 	'''
 	def instantCB(self, _command):
 		self.commandsCB.append(_command)
-
-
-
 
 	'''
 	Rolling over assigned callbacks, call them if all of template values exists in response.
@@ -122,30 +109,19 @@ class YiAPIListener(threading.Thread):
 		return unusedCBA
 
 
-
-
-
 class JSONStream():
 	jsonTest= re.compile('Extra data: line \d+ column \d+ - line \d+ column \d+ \(char (?P<char>\d+) - \d+\)')
-
 	jsonStr= ''
-
 
 	def __init__(self):
 		self.jsonStr= ''
 
-
-
 	def find(self, _in=''):
 		self.jsonStr+= _in
-		
 		jsonA, jsonDone= self.jsonRestore()
-
 		self.jsonStr= self.jsonStr[jsonDone:]
 
 		return jsonA
-
-
 
 	'''
 	Detect json-restored values from string containing several json-encoded blocks.
@@ -171,6 +147,5 @@ class JSONStream():
 
 				jsonLen= int(jsonErr.group('char'))
 				jsonFound.append( json.loads(self.jsonStr[jsonDone:jsonDone+jsonLen]) )
-
 				jsonDone+= jsonLen
 

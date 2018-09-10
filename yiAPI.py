@@ -6,37 +6,24 @@ from .yiAPICommand import *
 from .yiAPIListener import *
 
 
-
-
-
-
-
-
 class YiAPI():
 	#private commands
 	startSession= YiAPICommandGen(257)
 	stopSession= YiAPICommandGen(258)
 
-
 	ip= '192.168.42.1'
 	sock= None
 	tick= 0
 	sessionId= 0
-
 	commandTimeout= 10
 	connectionTimeout= .5
 	connectionTries= 10
-
 	listener= None
-
-
 
 	@staticmethod
 	def defaults(ip):
 		if ip:
 			YiAPI.ip= ip
-
-
 
 	def __init__(self, _ip=None):
 		if _ip:
@@ -54,7 +41,6 @@ class YiAPI():
 			logging.critical('Not connected')
 			return
 
-
 		self.sock.settimeout(None)
 		self.listener= YiAPIListener(self.sock)
 
@@ -64,7 +50,6 @@ class YiAPI():
 		else:
 			self.sessionId= res
 
-
 	#shoud be called at very end to tell camera it's released
 	def close(self):
 		self.cmd(self.stopSession)
@@ -72,8 +57,6 @@ class YiAPI():
 		if self.sock:
 			self.sock.close()
 		self.sock= None
-
-
 
 	'''
 	Run predefined _command.
@@ -104,8 +87,6 @@ class YiAPI():
 
 		return runCmd.result()
 
-
-
 	'''
 	Sent YiAPICommandGen co camera.
 	'''
@@ -119,8 +100,6 @@ class YiAPI():
 
 		self.tick+= 1
 		return True
-
-
 
 	def setCB(self, _type=None, _cb=None):
 		if not self.listener:

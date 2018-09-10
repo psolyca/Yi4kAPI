@@ -94,7 +94,7 @@ class YiAPI():
 		logging.debug("Send %s" % _cmdDict)
 		
 		try:
-			self.sock.sendall( bytes(json.dumps(_cmdDict),'ascii') )
+			self.sock.sendall( bytes(json.dumps(_cmdDict)) )
 		except:
 			return
 

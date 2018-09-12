@@ -13,10 +13,11 @@ class YiAPIListener(threading.Thread):
 	constantCB= {}
 	jsonStream= None
 
-	def __init__(self, _sock):
+	def __init__(self, _sock, _sCB=True):
 		threading.Thread.__init__(self)
 
 		self.sock= _sock
+		self.sCB= _sCB
 		self.commandsCB= []
 		self.constantCB= {
 			"start_video_record": None,
@@ -60,7 +61,7 @@ class YiAPIListener(threading.Thread):
 
 				self.commandsCB= self.applyCB(self.commandsCB, resJSON)
 
-				if resJSON['msg_id']==7:
+				if resJSON['msg_id']==7 and self.sCB:
 					for cCb in self.constantCB:
 						if self.constantCB[cCb] and resJSON['type']==cCb:
 							logging.info('Callback static')

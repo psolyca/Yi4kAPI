@@ -63,14 +63,15 @@ class YiAPI():
 	Run predefined _command.
 	if _vals provided, it's a value assigned to YiAPICommand.values respectively. 
 	'''
-	def cmd(self, _command, _val=None):
+	def cmd(self, _command, _val=None, _sCB=False):
+		listenerCB= YiAPIListener(self.sock, False) if _sCB else None
 		if not self.sock:
 			logging.error('Camera disconnected')
 			return -99999
 
 
 		runCmd= _command.makeCmd({'token':self.sessionId, 'heartbeat':self.tick}, _val)
-		self.listener.instantCB(runCmd)
+		listenerCB.instantCB(runCmd) if _sCB else self.listener.instantCB(runCmd)
 		
 		timeoutCmd= threading.Timer(self.commandTimeout, runCmd.blockingEvent.set)
 		timeoutCmd.start()
@@ -85,6 +86,8 @@ class YiAPI():
 		timeoutCmd.cancel()
 
 		logging.debug('Result %s' % runCmd.resultDict)
+
+		listenerCB.stop() if _sCB else None
 
 		return runCmd.result()
 

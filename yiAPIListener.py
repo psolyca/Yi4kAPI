@@ -42,7 +42,7 @@ class YiAPIListener(threading.Thread):
 
 	def run(self):
 		self.signal= threading.Event()
-		while not self.signal.wait(0.5):
+		while not self.signal.wait(0.01):
 			logging.info('Wait...')
 			try:
 				recv= self.sock.recv(1024)
